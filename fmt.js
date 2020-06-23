@@ -59,7 +59,7 @@ let options = {
 };
 dt = new Intl.DateTimeFormat("en-US", options).format(new Date);
 
-const time = dt.replace(/\//g, "-").replace(/\,/g, " ");
+const time = dt.replace(/\//g, "-").replace(/\,/g, "");
 
 module.exports = {
     reset,
