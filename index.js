@@ -31,6 +31,7 @@ const core = (options) => {
         title: "CUSTOM",
         color: "lCyan",
         msg: "This is a custom log. However... you didn't provide a message.",
+        logfile: "./logs/flogger.log",
     });
     function useFmting(formatting) {
         if (formatting === true) {
@@ -45,7 +46,7 @@ const core = (options) => {
         logfile.write(util.format(useFmting(false)) + "\n");
     }
 };
-const info = (msg) => {
+const info = (msg, logfile) => {
     return core({
         method: "info",
         title: "INFO",

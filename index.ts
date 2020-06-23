@@ -9,6 +9,7 @@ const core = (options: any) => {
     title: "CUSTOM",
     color: "lCyan",
     msg: "This is a custom log. However... you didn't provide a message.",
+    logfile: "./logs/flogger.log",
   });
   function useFmting(formatting: boolean) {
     if (formatting === true) {
@@ -25,7 +26,7 @@ const core = (options: any) => {
   }
 };
 
-const info = (msg: string) => {
+const info = (msg: string, logfile: fs.PathLike) => {
   return core({
     method: "info",
     title: "INFO",
