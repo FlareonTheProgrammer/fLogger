@@ -15,15 +15,31 @@ function setLogDir(directory: fs.PathLike) {
       }`
     );
     process.env.FLOGGER_DIR = directory.toString();
-  } else fs.mkdirSync(directory);
-  let logfile = fs.createWriteStream(`${process.env.FLOGGER_DIR}/flogger.log`, {
-    flags: "a",
-  });
-  logfile.write(
-    util.format(
-      `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
-    ) + "\n"
-  );
+    let logfile = fs.createWriteStream(
+      `${process.env.FLOGGER_DIR}/flogger.log`,
+      {
+        flags: "a",
+      }
+    );
+    logfile.write(
+      util.format(
+        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
+      ) + "\n"
+    );
+  } else {
+    fs.mkdirSync(directory);
+    let logfile = fs.createWriteStream(
+      `${process.env.FLOGGER_DIR}/flogger.log`,
+      {
+        flags: "a",
+      }
+    );
+    logfile.write(
+      util.format(
+        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
+      ) + "\n"
+    );
+  }
 }
 
 const core = (options: any) => {
