@@ -1,0 +1,14 @@
+{
+  "name": "flogger",
+  "version": "1.0.0",
+  "description": "a custom-built logger for my projects. Has customizable options.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "logger"
+  ],
+  "author": "FlareonTheProgrammer",
+  "license": "ISC"
+}
