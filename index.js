@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 const fmt_1 = __importDefault(require("./fmt"));
 const fs = __importStar(require("fs"));
+const util = __importStar(require("util"));
 const _ = __importStar(require("underscore"));
 const core = (options) => {
     _.defaults(options, {
@@ -41,7 +42,7 @@ const core = (options) => {
     console[options.method](useFmting(true));
     if (options.logfile !== undefined) {
         let logfile = fs.createWriteStream(options.logfile, { flags: "w" });
-        logfile.write(useFmting(false) + "\n");
+        logfile.write(util.format(useFmting(false)) + "\n");
     }
 };
 const info = (msg) => {

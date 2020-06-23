@@ -1,5 +1,6 @@
 import fmt from "./fmt";
 import * as fs from "fs";
+import * as util from "util";
 import * as _ from "underscore";
 
 const core = (options: any) => {
@@ -20,7 +21,7 @@ const core = (options: any) => {
 
   if (options.logfile !== undefined) {
     let logfile = fs.createWriteStream(options.logfile, { flags: "w" });
-    logfile.write(useFmting(false) + "\n");
+    logfile.write(util.format(useFmting(false)) + "\n");
   }
 };
 
