@@ -5,11 +5,11 @@ const core = (title, color, msg) => {
 }
 
 const info = (msg) => {
-    return ("INFO", "blue", msg)
+    return core("INFO", "blue", msg)
 }
 
 const log = (msg) => {
-    return ("LOG", "lGreen", msg)
+    return core("LOG", "lGreen", msg)
 }
 
 const warn = (msg) => {
@@ -20,7 +20,13 @@ const error = (msg) => {
     return core("ERROR", "red", msg)
 }
 
-error("HEY!");
+/* This was from testing
+core("Custom", "lCyan", "This is a custom thing.");
+info("This is info.");
+log("This is a log.");
+warn("This is a warning.")
+error("This is an error.");
+*/
 
 module.exports = {
     custom: core,
