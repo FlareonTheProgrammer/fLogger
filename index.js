@@ -26,14 +26,14 @@ const error = (msg) => {
     return core("error", "ERROR", "red", msg)
 }
 
-// This was from testing
+/*
 core("info", "Custom", "lCyan", "This is a custom thing.");
 core("Custom", "lBlue", "This is a custom thing that defaults to using console.log");
 info("This is info.");
 log("This is a log.");
 warn("This is a warning.")
 error("This is an error.");
-
+*/
 
 module.exports = {
     custom: core,
