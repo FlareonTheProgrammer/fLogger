@@ -3,45 +3,6 @@ import * as fs from "fs";
 import * as util from "util";
 import * as _ from "underscore";
 
-function setLogDir(directory: fs.PathLike) {
-  if (fs.existsSync(directory)) {
-    console.info(
-      `${fmt.reset}[${fmt.time}] [${
-        fmt.txt["blue"] + "fLogger" + fmt.reset
-      }] » ${
-        fmt.reset +
-        "Directory already exists; don't need to make one. Setting env variable..." +
-        fmt.reset
-      }`
-    );
-    process.env.FLOGGER_DIR = directory.toString();
-    let logfile = fs.createWriteStream(
-      `${process.env.FLOGGER_DIR}/flogger.log`,
-      {
-        flags: "a",
-      }
-    );
-    logfile.write(
-      util.format(
-        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
-      ) + "\n"
-    );
-  } else {
-    fs.mkdirSync(directory);
-    let logfile = fs.createWriteStream(
-      `${process.env.FLOGGER_DIR}/flogger.log`,
-      {
-        flags: "a",
-      }
-    );
-    logfile.write(
-      util.format(
-        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
-      ) + "\n"
-    );
-  }
-}
-
 const core = (options: any) => {
   _.defaults(options, {
     method: "log",
@@ -68,6 +29,39 @@ const core = (options: any) => {
     logfile.write(util.format(useFmting(false)) + "\n");
   }
 };
+
+function setLogDir(directory: fs.PathLike) {
+  if (fs.existsSync(directory)) {
+    console.info(
+      `${fmt.reset}[${fmt.time}] [${
+        fmt.txt["blue"] + "fLogger" + fmt.reset
+      }] » ${
+        fmt.reset +
+        "Directory already exists; don't need to make one. Setting env variable..." +
+        fmt.reset
+      }`
+    );
+    process.env.FLOGGER_DIR = directory.toString();
+    let logfile = fs.createWriteStream(`${directory.toString}/flogger.log`, {
+      flags: "a",
+    });
+    logfile.write(
+      util.format(
+        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
+      ) + "\n"
+    );
+  } else {
+    fs.mkdirSync(directory);
+    let logfile = fs.createWriteStream(`${directory.toString}/flogger.log`, {
+      flags: "a",
+    });
+    logfile.write(
+      util.format(
+        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
+      ) + "\n"
+    );
+  }
+}
 
 const info = (msg: string) => {
   return core({
