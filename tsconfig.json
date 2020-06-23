@@ -1,0 +1,9 @@
+{
+  "types": ["underscore"],
+  "compilerOptions": {
+    "target": "es6",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "sourceMap": true
+  }
+}

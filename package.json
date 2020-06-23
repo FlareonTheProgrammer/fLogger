@@ -10,5 +10,11 @@
     "logger"
   ],
   "author": "FlareonTheProgrammer",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.12.47",
+    "@types/underscore": "^1.10.1",
+    "typescript": "^3.9.5",
+    "underscore": "^1.10.2"
+  }
 }

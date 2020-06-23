@@ -1,44 +1,86 @@
-const fmt = require("./fmt");
-
-const core = (method, title, color, msg) => {
-    if (msg === undefined && color !== undefined) {
-        msg = color;
-        color = title;
-        title = method;
-        method = "log";
-    };
-    return console[method](`${fmt.reset}[${fmt.time}] [${fmt.txt[color] + title + fmt.reset}] » ${fmt.reset + msg + fmt.reset}`)
-}
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const fmt_1 = __importDefault(require("./fmt"));
+const fs = __importStar(require("fs"));
+const _ = __importStar(require("underscore"));
+const core = (options) => {
+    _.defaults(options, {
+        method: "log",
+        title: "CUSTOM",
+        color: "lCyan",
+        msg: "This is a custom log. However... you didn't provide a message.",
+    });
+    function useFmting(formatting) {
+        if (formatting === true) {
+            return `${fmt_1.default.reset}[${fmt_1.default.time}] [${fmt_1.default.txt[options.color] + options.title + fmt_1.default.reset}] » ${fmt_1.default.reset + options.msg + fmt_1.default.reset}`;
+        }
+        else
+            return `[${fmt_1.default.time}] [${options.title}] » ${options.msg}`;
+    }
+    console[options.method](useFmting(true));
+    if (options.logfile !== undefined) {
+        let logfile = fs.createWriteStream(options.logfile);
+        logfile.write(useFmting(false));
+    }
+};
 const info = (msg) => {
-    return core("info", "INFO", "blue", msg)
-}
-
+    return core({
+        method: "info",
+        title: "INFO",
+        color: "blue",
+        msg: msg,
+    });
+};
 const log = (msg) => {
-    return core("log", "LOG", "lGreen", msg)
-}
-
+    return core({
+        method: "log",
+        title: "LOG",
+        color: "lGreen",
+        msg: msg,
+    });
+};
 const warn = (msg) => {
-    return core("warn", "WARN", "yellow", msg)
-}
-
+    return core({
+        method: "warn",
+        title: "WARN",
+        color: "yellow",
+        msg: msg,
+    });
+};
 const error = (msg) => {
-    return core("error", "ERROR", "red", msg)
-}
-
-/*
-core("info", "Custom", "lCyan", "This is a custom thing.");
-core("Custom", "lBlue", "This is a custom thing that defaults to using console.log");
-info("This is info.");
-log("This is a log.");
-warn("This is a warning.")
-error("This is an error.");
-*/
-
+    return core({
+        method: "error",
+        title: "ERROR",
+        color: "red",
+        msg: msg,
+    });
+};
 module.exports = {
     custom: core,
     info,
     log,
     warn,
-    error
+    error,
 };
+//# sourceMappingURL=index.js.map
