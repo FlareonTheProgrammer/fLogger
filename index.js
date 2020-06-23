@@ -25,13 +25,22 @@ const fmt_1 = __importDefault(require("./fmt"));
 const fs = __importStar(require("fs"));
 const util = __importStar(require("util"));
 const _ = __importStar(require("underscore"));
+function setLogDir(directory) {
+    if (fs.existsSync(directory)) {
+        console.info(`${fmt_1.default.reset}[${fmt_1.default.time}] [${fmt_1.default.txt["blue"] + "fLogger" + fmt_1.default.reset}] » ${fmt_1.default.reset +
+            "Directory already exists; don't need to make one. Setting env variable..." +
+            fmt_1.default.reset}`);
+        process.env.FLOGGER_DIR = directory.toString();
+    }
+    else
+        fs.mkdirSync(directory);
+}
 const core = (options) => {
     _.defaults(options, {
         method: "log",
         title: "CUSTOM",
         color: "lCyan",
         msg: "This is a custom log. However... you didn't provide a message.",
-        logfile: "./logs/flogger.log",
     });
     function useFmting(formatting) {
         if (formatting === true) {
@@ -41,12 +50,14 @@ const core = (options) => {
             return `[${fmt_1.default.time}] [${options.title}] » ${options.msg}`;
     }
     console[options.method](useFmting(true));
-    if (options.logfile !== undefined) {
-        let logfile = fs.createWriteStream(options.logfile, { flags: "a" });
+    if (process.env.FLOGGER_DIR !== undefined) {
+        let logfile = fs.createWriteStream(`${process.env.FLOGGER_DIR}/flogger.log`, {
+            flags: "a",
+        });
         logfile.write(util.format(useFmting(false)) + "\n");
     }
 };
-const info = (msg, logfile) => {
+const info = (msg) => {
     return core({
         method: "info",
         title: "INFO",
@@ -84,5 +95,6 @@ module.exports = {
     log,
     warn,
     error,
+    setLogDir,
 };
 //# sourceMappingURL=index.js.map

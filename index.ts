@@ -3,13 +3,27 @@ import * as fs from "fs";
 import * as util from "util";
 import * as _ from "underscore";
 
+function setLogDir(directory: fs.PathLike) {
+  if (fs.existsSync(directory)) {
+    console.info(
+      `${fmt.reset}[${fmt.time}] [${
+        fmt.txt["blue"] + "fLogger" + fmt.reset
+      }] » ${
+        fmt.reset +
+        "Directory already exists; don't need to make one. Setting env variable..." +
+        fmt.reset
+      }`
+    );
+    process.env.FLOGGER_DIR = directory.toString();
+  } else fs.mkdirSync(directory);
+}
+
 const core = (options: any) => {
   _.defaults(options, {
     method: "log",
     title: "CUSTOM",
     color: "lCyan",
     msg: "This is a custom log. However... you didn't provide a message.",
-    logfile: "./logs/flogger.log",
   });
   function useFmting(formatting: boolean) {
     if (formatting === true) {
@@ -20,13 +34,18 @@ const core = (options: any) => {
   }
   console[options.method](useFmting(true));
 
-  if (options.logfile !== undefined) {
-    let logfile = fs.createWriteStream(options.logfile, { flags: "a" });
+  if (process.env.FLOGGER_DIR !== undefined) {
+    let logfile = fs.createWriteStream(
+      `${process.env.FLOGGER_DIR}/flogger.log`,
+      {
+        flags: "a",
+      }
+    );
     logfile.write(util.format(useFmting(false)) + "\n");
   }
 };
 
-const info = (msg: string, logfile: fs.PathLike) => {
+const info = (msg: string) => {
   return core({
     method: "info",
     title: "INFO",
@@ -77,4 +96,5 @@ export = {
   log,
   warn,
   error,
+  setLogDir,
 };
