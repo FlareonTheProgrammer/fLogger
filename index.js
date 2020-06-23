@@ -40,8 +40,8 @@ const core = (options) => {
     }
     console[options.method](useFmting(true));
     if (options.logfile !== undefined) {
-        let logfile = fs.createWriteStream(options.logfile);
-        logfile.write(useFmting(false));
+        let logfile = fs.createWriteStream(options.logfile, { flags: "w" });
+        logfile.write(useFmting(false) + "\n");
     }
 };
 const info = (msg) => {

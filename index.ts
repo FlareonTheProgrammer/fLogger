@@ -19,12 +19,12 @@ const core = (options: any) => {
   console[options.method](useFmting(true));
 
   if (options.logfile !== undefined) {
-    let logfile = fs.createWriteStream(options.logfile);
-    logfile.write(useFmting(false));
+    let logfile = fs.createWriteStream(options.logfile, { flags: "w" });
+    logfile.write(useFmting(false) + "\n");
   }
 };
 
-const info = (msg) => {
+const info = (msg: string) => {
   return core({
     method: "info",
     title: "INFO",
@@ -33,7 +33,7 @@ const info = (msg) => {
   });
 };
 
-const log = (msg) => {
+const log = (msg: string) => {
   return core({
     method: "log",
     title: "LOG",
@@ -42,7 +42,7 @@ const log = (msg) => {
   });
 };
 
-const warn = (msg) => {
+const warn = (msg: string) => {
   return core({
     method: "warn",
     title: "WARN",
@@ -51,7 +51,7 @@ const warn = (msg) => {
   });
 };
 
-const error = (msg) => {
+const error = (msg: string) => {
   return core({
     method: "error",
     title: "ERROR",
