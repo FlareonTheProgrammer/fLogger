@@ -51,6 +51,7 @@ function setLogDir(directory: fs.PathLike) {
       ) + "\n"
     );
   } else {
+    process.env.FLOGGER_DIR = directory.toString();
     fs.mkdirSync(directory);
     let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
       flags: "a",

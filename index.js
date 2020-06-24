@@ -59,6 +59,7 @@ function setLogDir(directory) {
         logfile.write(util.format(`[${fmt_1.default.time}] [FLOGGER_INTERNAL] » New Flogger session started.`) + "\n");
     }
     else {
+        process.env.FLOGGER_DIR = directory.toString();
         fs.mkdirSync(directory);
         let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
             flags: "a",
