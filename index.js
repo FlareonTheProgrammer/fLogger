@@ -53,14 +53,14 @@ function setLogDir(directory) {
             "Directory already exists; don't need to make one. Setting env variable..." +
             fmt_1.default.reset}`);
         process.env.FLOGGER_DIR = directory.toString();
-        let logfile = fs.createWriteStream(`${directory.toString}/flogger.log`, {
+        let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
             flags: "a",
         });
         logfile.write(util.format(`[${fmt_1.default.time}] [FLOGGER_INTERNAL] » New Flogger session started.`) + "\n");
     }
     else {
         fs.mkdirSync(directory);
-        let logfile = fs.createWriteStream(`${directory.toString}/flogger.log`, {
+        let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
             flags: "a",
         });
         logfile.write(util.format(`[${fmt_1.default.time}] [FLOGGER_INTERNAL] » New Flogger session started.`) + "\n");
