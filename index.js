@@ -48,18 +48,17 @@ const core = (options) => {
     }
 };
 function setLogDir(directory) {
+    process.env.FLOGGER_DIR = directory.toString();
     if (fs.existsSync(directory)) {
         console.info(`${fmt_1.default.reset}[${fmt_1.default.time}] [${fmt_1.default.txt["blue"] + "fLogger" + fmt_1.default.reset}] » ${fmt_1.default.reset +
             "Directory already exists; don't need to make one. Setting env variable..." +
             fmt_1.default.reset}`);
-        process.env.FLOGGER_DIR = directory.toString();
         let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
             flags: "a",
         });
         logfile.write(util.format(`[${fmt_1.default.time}] [FLOGGER_INTERNAL] » New Flogger session started.`) + "\n");
     }
     else {
-        process.env.FLOGGER_DIR = directory.toString();
         fs.mkdirSync(directory);
         let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
             flags: "a",

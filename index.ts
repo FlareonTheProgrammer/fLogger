@@ -31,6 +31,7 @@ const core = (options: any) => {
 };
 
 function setLogDir(directory: fs.PathLike) {
+  process.env.FLOGGER_DIR = directory.toString();
   if (fs.existsSync(directory)) {
     console.info(
       `${fmt.reset}[${fmt.time}] [${
@@ -41,7 +42,6 @@ function setLogDir(directory: fs.PathLike) {
         fmt.reset
       }`
     );
-    process.env.FLOGGER_DIR = directory.toString();
     let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
       flags: "a",
     });
@@ -51,7 +51,6 @@ function setLogDir(directory: fs.PathLike) {
       ) + "\n"
     );
   } else {
-    process.env.FLOGGER_DIR = directory.toString();
     fs.mkdirSync(directory);
     let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
       flags: "a",
