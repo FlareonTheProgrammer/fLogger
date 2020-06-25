@@ -46,19 +46,9 @@ const bg = {
   black: "\x1b[40m",
 };
 
-let options = {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false,
+const noBleed = (input: string) => {
+  return reset + input + reset;
 };
-const dt = new Intl.DateTimeFormat("en-US", options).format(new Date());
-
-const time = dt.replace(/\//g, "-").replace(/\,/g, "");
 
 export = {
   reset,
@@ -70,5 +60,5 @@ export = {
   hidden,
   txt,
   bg,
-  time,
+  noBleed,
 };

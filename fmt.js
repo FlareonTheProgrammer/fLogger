@@ -41,17 +41,9 @@ const bg = {
     white: "\x1b[47m",
     black: "\x1b[40m",
 };
-let options = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
+const noBleed = (input) => {
+    return reset + input + reset;
 };
-const dt = new Intl.DateTimeFormat("en-US", options).format(new Date());
-const time = dt.replace(/\//g, "-").replace(/\,/g, "");
 module.exports = {
     reset,
     bright,
@@ -62,6 +54,6 @@ module.exports = {
     hidden,
     txt,
     bg,
-    time,
+    noBleed,
 };
 //# sourceMappingURL=fmt.js.map

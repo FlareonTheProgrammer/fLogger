@@ -2,6 +2,34 @@ import fmt from "./fmt";
 import * as fs from "fs";
 import * as util from "util";
 import * as _ from "underscore";
+import * as crypto from "crypto";
+import moment from "moment";
+
+function timestamp() {
+  return `[${moment().format("MM-DD-YYYY hh:mm:ss.SSS")}] `;
+}
+
+function label(input: string, color?: string) {
+  if (color) {
+    return `${fmt.noBleed(`[${fmt.txt[color] + input}`)}]`;
+  } else {
+    return `[${input}]`;
+  }
+}
+
+function generateID() {
+  return crypto
+    .createHash("shake256", { outputLength: 8 })
+    .update(Buffer.from(timestamp()))
+    .digest("hex");
+}
+
+const floggerNewSession =
+  util.format(
+    `${
+      timestamp() + label("FLOGGER_INTERNAL")
+    } » New Flogger session started with Session ID: ${generateID()}`
+  ) + "\n";
 
 const core = (options: any) => {
   _.defaults(options, {
@@ -10,14 +38,19 @@ const core = (options: any) => {
     color: "lCyan",
     msg: "This is a custom log. However... you didn't provide a message.",
   });
-  function useFmting(formatting: boolean) {
-    if (formatting === true) {
-      return `${fmt.reset}[${fmt.time}] [${
-        fmt.txt[options.color] + options.title + fmt.reset
-      }] » ${fmt.reset + options.msg + fmt.reset}`;
-    } else return `[${fmt.time}] [${options.title}] » ${options.msg}`;
+  let k = options;
+
+  function useFormatting(formatting: boolean) {
+    switch (formatting) {
+      case true:
+        return `${
+          fmt.noBleed(timestamp()) + label(k.title, k.color)
+        } » ${fmt.noBleed(options.msg)}`;
+      case false:
+        return `${timestamp() + label(k.title)} » ${k.msg}`;
+    }
   }
-  console[options.method](useFmting(true));
+  console[options.method](useFormatting(true));
 
   if (process.env.FLOGGER_DIR !== undefined) {
     let logfile = fs.createWriteStream(
@@ -26,7 +59,7 @@ const core = (options: any) => {
         flags: "a",
       }
     );
-    logfile.write(util.format(useFmting(false)) + "\n");
+    logfile.write(util.format(useFormatting(false)) + "\n");
   }
 };
 
@@ -34,32 +67,20 @@ function setLogDir(directory: fs.PathLike) {
   process.env.FLOGGER_DIR = directory.toString();
   if (fs.existsSync(directory)) {
     console.info(
-      `${fmt.reset}[${fmt.time}] [${
-        fmt.txt["blue"] + "fLogger" + fmt.reset
-      }] » ${
-        fmt.reset +
-        "Directory already exists; don't need to make one. Setting env variable..." +
-        fmt.reset
-      }`
+      `${
+        timestamp() + label("FLOGGER_INTERNAL", "blue")
+      } » ${"Directory already exists; don't need to make one. Setting env variable..."}`
     );
     let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
       flags: "a",
     });
-    logfile.write(
-      util.format(
-        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
-      ) + "\n"
-    );
+    logfile.write(floggerNewSession);
   } else {
     fs.mkdirSync(directory);
     let logfile = fs.createWriteStream(`${directory}/flogger.log`, {
       flags: "a",
     });
-    logfile.write(
-      util.format(
-        `[${fmt.time}] [FLOGGER_INTERNAL] » New Flogger session started.`
-      ) + "\n"
-    );
+    logfile.write(floggerNewSession);
   }
 }
 
