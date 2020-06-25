@@ -34,6 +34,7 @@ const floggerNewSession =
 const core = (options: any) => {
   _.defaults(options, {
     method: "log",
+    isUserDefined: false,
     title: "CUSTOM",
     color: "lCyan",
     msg: "This is a custom log. However... you didn't provide a message.",
@@ -47,7 +48,14 @@ const core = (options: any) => {
           fmt.noBleed(timestamp()) + label(k.title, k.color)
         } » ${fmt.noBleed(options.msg)}`;
       case false:
-        return `${timestamp() + label(k.title)} » ${k.msg}`;
+        switch (k.isUserDefined) {
+          case true:
+            return `${timestamp() + label(k.title) + label("USER_DEFINED")} » ${
+              k.msg
+            }`;
+          case false:
+            return `${timestamp() + label(k.title)} » ${k.msg}`;
+        }
     }
   }
   console[options.method](useFormatting(true));
@@ -120,6 +128,11 @@ const error = (msg: string) => {
   });
 };
 
+const custom = (options: any) => {
+  options.isUserDefined = true;
+  return core(options);
+};
+
 /*
 core("info", "Custom", "lCyan", "This is a custom thing.");
 core("Custom", "lBlue", "This is a custom thing that defaults to using console.log");
@@ -130,7 +143,7 @@ error("This is an error.");
 */
 
 export = {
-  custom: core,
+  custom,
   info,
   log,
   warn,

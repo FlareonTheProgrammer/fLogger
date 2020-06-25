@@ -48,6 +48,7 @@ const floggerNewSession = util.format(`${timestamp() + label("FLOGGER_INTERNAL")
 const core = (options) => {
     _.defaults(options, {
         method: "log",
+        isUserDefined: false,
         title: "CUSTOM",
         color: "lCyan",
         msg: "This is a custom log. However... you didn't provide a message.",
@@ -58,7 +59,12 @@ const core = (options) => {
             case true:
                 return `${fmt_1.default.noBleed(timestamp()) + label(k.title, k.color)} » ${fmt_1.default.noBleed(options.msg)}`;
             case false:
-                return `${timestamp() + label(k.title)} » ${k.msg}`;
+                switch (k.isUserDefined) {
+                    case true:
+                        return `${timestamp() + label(k.title) + label("USER_DEFINED")} » ${k.msg}`;
+                    case false:
+                        return `${timestamp() + label(k.title)} » ${k.msg}`;
+                }
         }
     }
     console[options.method](useFormatting(true));
@@ -118,8 +124,12 @@ const error = (msg) => {
         msg: msg,
     });
 };
+const custom = (options) => {
+    options.isUserDefined = true;
+    return core(options);
+};
 module.exports = {
-    custom: core,
+    custom,
     info,
     log,
     warn,
