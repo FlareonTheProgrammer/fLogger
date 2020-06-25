@@ -10,12 +10,15 @@
     "logger"
   ],
   "author": "FlareonTheProgrammer",
+  "repository": {
+    "url": "https://github.com/FlareonTheProgrammer/flogger#v2.git"
+  },
   "license": "ISC",
   "dependencies": {
-    "@types/callsites": "^3.0.0",
-    "@types/moment": "^2.13.0",
     "@types/node": "^12.12.47",
     "@types/underscore": "^1.10.1",
+    "callsites": "^3.1.0",
+    "moment": "^2.27.0",
     "typescript": "^3.9.5",
     "underscore": "^1.10.2"
   }
