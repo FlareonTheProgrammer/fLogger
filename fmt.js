@@ -1,12 +1,11 @@
-
-reset = "\x1b[0m"
-bright = "\x1b[1m"
-dim = "\x1b[2m"
-underline = "\x1b[4m"
-blink = "\x1b[5m"
-reverse = "\x1b[7m"
-hidden = "\x1b[8m"
-
+"use strict";
+const reset = "\x1b[0m";
+const bright = "\x1b[1m";
+const dim = "\x1b[2m";
+const underline = "\x1b[4m";
+const blink = "\x1b[5m";
+const reverse = "\x1b[7m";
+const hidden = "\x1b[8m";
 const txt = {
     dRed: `${reset}${dim}\x1b[31m`,
     dGreen: `${reset}${dim}\x1b[32m`,
@@ -14,28 +13,24 @@ const txt = {
     dBlue: `${reset}${dim}\x1b[34m`,
     dMagenta: `${reset}${dim}\x1b[35m`,
     dCyan: `${reset}${dim}\x1b[36m`,
-
     red: `\x1b[31m`,
     green: `\x1b[32m`,
     yellow: `\x1b[33m`,
     blue: `\x1b[34m`,
     magenta: `\x1b[35m`,
     cyan: `\x1b[36m`,
-
     lRed: `${reset}${bright}\x1b[31m`,
     lGreen: `${reset}${bright}\x1b[32m`,
     lYellow: `${reset}${bright}\x1b[33m`,
     lBlue: `${reset}${bright}\x1b[34m`,
     lMagenta: `${reset}${bright}\x1b[35m`,
     lCyan: `${reset}${bright}\x1b[36m`,
-
     white: `${reset}\x1b[37m`,
     lGrey: `${reset}${dim}\x1b[37m`,
     grey: `${reset}${bright}\x1b[30m`,
     dGrey: `${reset}${dim}${bright}\x1b[30m`,
-    black: `${reset}\x1b[30m`
+    black: `${reset}\x1b[30m`,
 };
-
 const bg = {
     red: "\x1b[41m",
     green: "\x1b[42m",
@@ -46,21 +41,9 @@ const bg = {
     white: "\x1b[47m",
     black: "\x1b[40m",
 };
-
-let options = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
+const noBleed = (input) => {
+    return reset + input + reset;
 };
-dt = new Intl.DateTimeFormat("en-US", options).format(new Date);
-
-const time = dt.replace(/\//g, "-").replace(/\,/g, "");
-
 module.exports = {
     reset,
     bright,
@@ -71,5 +54,6 @@ module.exports = {
     hidden,
     txt,
     bg,
-    time
+    noBleed,
 };
+//# sourceMappingURL=fmt.js.map
