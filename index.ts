@@ -50,7 +50,7 @@ class FloggerClass {
     });
     let k = options;
 
-    function useFormatting(formatting: boolean) {
+    const useFormatting = (formatting: boolean) => {
       switch (formatting) {
         case true:
           return `${

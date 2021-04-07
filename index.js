@@ -40,7 +40,7 @@ class FloggerClass {
                 msg: "This is a custom log. However... you didn't provide a message.",
             });
             let k = options;
-            function useFormatting(formatting) {
+            const useFormatting = (formatting) => {
                 switch (formatting) {
                     case true:
                         return `${fmt_1.default.noBleed(this.timestamp()) + this.label(k.title, k.color)} » ${fmt_1.default.noBleed(options.msg)}`;
@@ -52,7 +52,7 @@ class FloggerClass {
                                 return `${this.timestamp() + this.label(k.title)} » ${k.msg}`;
                         }
                 }
-            }
+            };
             console[options.method](useFormatting(true));
             if (process.env.FLOGGER_DIR !== undefined) {
                 let logfile = fs.createWriteStream(`${process.env.FLOGGER_DIR}/flogger.log`, {
