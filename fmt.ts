@@ -7,6 +7,7 @@ const reverse = "\x1b[7m";
 const hidden = "\x1b[8m";
 
 const txt = {
+  // Dim Colors
   dRed: `${reset}${dim}\x1b[31m`,
   dGreen: `${reset}${dim}\x1b[32m`,
   dYellow: `${reset}${dim}\x1b[33m`,
@@ -14,6 +15,7 @@ const txt = {
   dMagenta: `${reset}${dim}\x1b[35m`,
   dCyan: `${reset}${dim}\x1b[36m`,
 
+  // Normal Colors
   red: `\x1b[31m`,
   green: `\x1b[32m`,
   yellow: `\x1b[33m`,
@@ -21,6 +23,7 @@ const txt = {
   magenta: `\x1b[35m`,
   cyan: `\x1b[36m`,
 
+  // Bright Colors
   lRed: `${reset}${bright}\x1b[31m`,
   lGreen: `${reset}${bright}\x1b[32m`,
   lYellow: `${reset}${bright}\x1b[33m`,
@@ -28,6 +31,7 @@ const txt = {
   lMagenta: `${reset}${bright}\x1b[35m`,
   lCyan: `${reset}${bright}\x1b[36m`,
 
+  // Monochromatic
   white: `${reset}\x1b[37m`,
   lGrey: `${reset}${dim}\x1b[37m`,
   grey: `${reset}${bright}\x1b[30m`,

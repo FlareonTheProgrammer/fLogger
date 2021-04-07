@@ -1,6 +1,6 @@
 {
   "name": "flogger",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "a custom-built logger for my projects. Has customizable options.",
   "main": "index.js",
   "scripts": {
