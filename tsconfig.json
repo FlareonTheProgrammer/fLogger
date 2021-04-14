@@ -1,4 +1,5 @@
 {
+  "types": ["underscore"],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
