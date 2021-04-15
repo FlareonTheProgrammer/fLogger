@@ -22,16 +22,42 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.flog = exports.FloggerClass = void 0;
+exports.FloggerClass = void 0;
 const chalk_1 = __importDefault(require("chalk"));
-const fs = __importStar(require("fs"));
-const util = __importStar(require("util"));
-const crypto = __importStar(require("crypto"));
 const moment_1 = __importDefault(require("moment"));
+const underscore_1 = __importDefault(require("underscore"));
+const fs = __importStar(require("fs"));
+const __util = __importStar(require("util"));
+const util = __importStar(require("./util"));
+const crypto = __importStar(require("crypto"));
 class FloggerClass {
-    constructor() {
-        this.floggerNewSession = util.format(`${this.timestamp() + this.label("FLOGGER_INTERNAL")} » New Flogger session started with Session ID: ${this.generateID()}`) + "\n";
-        // Maybe put something here later, idk
+    //  __logfile?: string
+    constructor(loggerOptions) {
+        this.floggerNewSession = __util.format(`${this.timestamp() + this.label("FLOGGER_INTERNAL")} » New Flogger session started with Session ID: ${this.generateID()}`) + "\n";
+        if (loggerOptions) {
+            const opts = loggerOptions;
+            if (opts.save) {
+                underscore_1.default.defaults(opts.save, {
+                    appName: "flogger",
+                });
+                const sv = opts.save;
+                if (sv.logDir.toString().endsWith("/")) {
+                    sv.logDir = sv.logDir.toString().slice(0, -1);
+                }
+                this.logDir = sv.logDir;
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sv.appName = util.enforceFilenameRegex(sv.appName);
+                if (sv.appName == "") {
+                    sv.appName = "flogger";
+                }
+                this.logfile = `${moment_1.default().format("YYYYMMDD")}-${sv.appName}.log`;
+                // if(!sv.disableInternalLog) {this.__logfile = `flogger_internal.log`;}
+                if (!fs.existsSync(this.logDir)) {
+                    fs.mkdirSync(this.logDir);
+                }
+                fs.appendFileSync(`${this.logDir}/${this.logfile}`, this.floggerNewSession);
+            }
+        }
     }
     label(input, color) {
         if (color) {
@@ -51,29 +77,10 @@ class FloggerClass {
             .digest("hex");
     }
     core(options) {
-        console[options.method](`${this.timestamp() + this.label(options.title, options.color)} » ${options.msg}`);
-        if (process.env.FLOGGER_DIR !== undefined) {
-            const logfile = fs.createWriteStream(`${process.env.FLOGGER_DIR}/flogger.log`, {
-                flags: "a",
-            });
-            logfile.write(util.format(`${this.timestamp() + this.label(options.title)} » ${options.msg}`) + "\n");
-        }
-    }
-    setLogDir(directory) {
-        process.env.FLOGGER_DIR = directory.toString();
-        if (fs.existsSync(directory)) {
-            console.info(`${this.timestamp() + this.label("FLOGGER_INTERNAL", "blue")} » ${"Directory already exists; don't need to make one. Setting env variable..."}`);
-            const logfile = fs.createWriteStream(`${directory}/flogger.log`, {
-                flags: "a",
-            });
-            logfile.write(this.floggerNewSession);
-        }
-        else {
-            fs.mkdirSync(directory);
-            const logfile = fs.createWriteStream(`${directory}/flogger.log`, {
-                flags: "a",
-            });
-            logfile.write(this.floggerNewSession);
+        const stamp = this.timestamp();
+        console[options.method](`${stamp + this.label(options.title, options.color)} » ${options.msg}`);
+        if (this.logfile) {
+            fs.appendFileSync(`${this.logDir}/${this.logfile}`, __util.format(`${stamp + this.label(options.title)} » ${options.msg}`) + "\n");
         }
     }
     info(msg) {
@@ -116,7 +123,3 @@ class FloggerClass {
     }
 }
 exports.FloggerClass = FloggerClass;
-// Legacy Support
-exports.flog = new FloggerClass();
-// it would be less than desirable to have to list every thing we're pulling from the class, but...
-// I can't think of any other solution at the moment.

@@ -5,11 +5,25 @@ export declare type Color = 'black' | 'red' | 'green' | 'yellow' | 'blue' | 'mag
  * Logger options for initializing the class
  */
 export interface LoggerOptions {
-    /**
-     * Directory to put log files in
-     */
-    logDir?: fs.PathLike;
+    save?: {
+        logDir: fs.PathLike;
+        /**
+         * This property may *say* it's a string, but not just anything can be in it.
+         * The following regex will be used to enforce typical username standards (alnum, "-", "_")
+         * /[^a-zA-Z0-9_-]+/g
+         */
+        appName?: string;
+        /**
+         * Whether or not to automatically start a new log file when a date change is detected
+         */
+        splitOnDateChange?: boolean;
+        /**
+         * Choose to disable the internal logger for Flogger
+         */
+        disableInternalLog?: boolean;
+    };
 }
+export declare function enforceFilenameRegex(input: string): string;
 /**
  * Options for the "core" method
  */

@@ -1,14 +1,15 @@
 /// <reference types="node" />
 import * as fs from "fs";
-import * as lutil from "./lutil";
+import * as util from "./util";
 export declare class FloggerClass {
-    constructor();
+    logDir?: fs.PathLike;
+    logfile?: string;
+    constructor(loggerOptions?: util.LoggerOptions);
     private label;
     private timestamp;
     private generateID;
     floggerNewSession: string;
-    protected core(options: lutil.CoreOptions): void;
-    setLogDir(directory: fs.PathLike): void;
+    protected core(options: util.CoreOptions): void;
     info(msg: string): void;
     log(msg: string): void;
     warn(msg: string): void;
@@ -16,6 +17,5 @@ export declare class FloggerClass {
     /**
      * custom
      */
-    custom(options: lutil.CustomOptions): void;
+    custom(options: util.CustomOptions): void;
 }
-export declare const flog: FloggerClass;

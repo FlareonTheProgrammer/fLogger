@@ -1,18 +1,42 @@
 import chalk from "chalk";
-import * as fs from "fs";
-import * as util from "util";
-import * as lutil from "./lutil";
-import * as crypto from "crypto";
 import moment from "moment";
-
+import _ from "underscore";
+import * as fs from "fs";
+import * as __util from "util";
+import * as util from "./util";
+import * as crypto from "crypto";
 
 
 export class FloggerClass {
-  constructor() {
-    // Maybe put something here later, idk
+  logDir?: fs.PathLike;
+  logfile?: string;
+//  __logfile?: string
+  constructor(loggerOptions?: util.LoggerOptions) {
+    if(loggerOptions) {
+      const opts = loggerOptions;
+      if(opts.save) {
+        _.defaults(opts.save, {
+          appName: "flogger",
+          // splitOnDateChange: true,
+          // disableInternalLog: false,
+        });
+        const sv = opts.save;
+        if(sv.logDir.toString().endsWith("/")) {sv.logDir = sv.logDir.toString().slice(0, -1);}
+        this.logDir = sv.logDir;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sv.appName = util.enforceFilenameRegex(sv.appName!);
+        if(sv.appName == "") {
+          sv.appName = "flogger";
+        }
+        this.logfile = `${moment().format("YYYYMMDD")}-${sv.appName}.log`;
+        // if(!sv.disableInternalLog) {this.__logfile = `flogger_internal.log`;}
+        if (!fs.existsSync(this.logDir)) { fs.mkdirSync(this.logDir); }
+        fs.appendFileSync(`${this.logDir}/${this.logfile}`, this.floggerNewSession);
+      }
+    }
   }
 
-  private label(input: string, color?: lutil.Color) {
+  private label(input: string, color?: util.Color) {
     if (color) {
       return `[${chalk[color](input)}] `;
     } else {
@@ -32,47 +56,22 @@ export class FloggerClass {
   }
 
   floggerNewSession =
-    util.format(
+    __util.format(
       `${
         this.timestamp() + this.label("FLOGGER_INTERNAL")
       } » New Flogger session started with Session ID: ${this.generateID()}`
     ) + "\n";
 
-  protected core(options: lutil.CoreOptions) : void {
+  protected core(options: util.CoreOptions) : void {
+
+    const stamp = this.timestamp();
 
     console[options.method](`${
-      this.timestamp() + this.label(options.title, options.color)
+      stamp + this.label(options.title, options.color)
     } » ${options.msg}`);
 
-    if (process.env.FLOGGER_DIR !== undefined) {
-      const logfile = fs.createWriteStream(
-        `${process.env.FLOGGER_DIR}/flogger.log`,
-        {
-          flags: "a",
-        }
-      );
-      logfile.write(util.format(`${this.timestamp() + this.label(options.title)} » ${options.msg}`) + "\n");
-    }
-  }
-
-  setLogDir(directory: fs.PathLike) : void {
-    process.env.FLOGGER_DIR = directory.toString();
-    if (fs.existsSync(directory)) {
-      console.info(
-        `${
-          this.timestamp() + this.label("FLOGGER_INTERNAL", "blue")
-        } » ${"Directory already exists; don't need to make one. Setting env variable..."}`
-      );
-      const logfile = fs.createWriteStream(`${directory}/flogger.log`, {
-        flags: "a",
-      });
-      logfile.write(this.floggerNewSession);
-    } else {
-      fs.mkdirSync(directory);
-      const logfile = fs.createWriteStream(`${directory}/flogger.log`, {
-        flags: "a",
-      });
-      logfile.write(this.floggerNewSession);
+    if (this.logfile) {
+      fs.appendFileSync(`${this.logDir}/${this.logfile}`, __util.format(`${stamp + this.label(options.title)} » ${options.msg}`) + "\n");
     }
   }
 
@@ -115,13 +114,7 @@ export class FloggerClass {
   /**
    * custom
    */
-  public custom(options: lutil.CustomOptions) : void {
+  public custom(options: util.CustomOptions) : void {
     return this.core(options);
   }
 }
-
-
-// Legacy Support
-export const flog = new FloggerClass();
-// it would be less than desirable to have to list every thing we're pulling from the class, but...
-// I can't think of any other solution at the moment.
